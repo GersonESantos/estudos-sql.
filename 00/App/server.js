@@ -26,4 +26,34 @@ app.get('/usuarios', async (req, res) => {
     }
 });
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// Rota para CADASTRAR novo usuário
+app.post('/usuarios', async (req, res) => {
+    try {
+        const { nome, email, senha } = req.body; // Pega os dados do formulário
+        await sql.connect(config);
+        
+        await sql.query`INSERT INTO Usuarios (Nome, Email, SenhaHash) 
+                        VALUES (${nome}, ${email}, ${senha})`;
+        
+        res.status(201).json({ message: 'Usuário cadastrado com sucesso!' });
+    } catch (err) {
+        res.status(500).send(err.message);
+    }
+});
+
 app.listen(3000, () => console.log('API rodando na porta 3000'));
