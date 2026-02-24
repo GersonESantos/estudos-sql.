@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Cadastro Xeon</title>
+    <style>
+        body { font-family: sans-serif; background: #222; color: white; padding: 20px; }
+        .card { background: #333; padding: 15px; border-radius: 8px; margin-bottom: 10px; }
+    </style>
+</head>
+<body>
+    <h1>Usuários no Banco (Xeon Server)</h1>
+    <div id="lista">Carregando...</div>
+
+    <script>
+        async function buscarUsuarios() {
+            const resp = await fetch('http://localhost:3000/usuarios');
+            const dados = await resp.json();
+            const lista = document.getElementById('lista');
+            lista.innerHTML = dados.map(u => `
+                <div class="card">
+                    <strong>${u.Nome}</strong> - ${u.Email}<br>
+                    <small>Cadastrado em: ${u.DataCadastro}</small>
+                </div>
+            `).join('');
+        }
+        buscarUsuarios();
+    </script>
+</body>
+</html>
