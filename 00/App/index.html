@@ -14,37 +14,49 @@
     <div id="lista">Carregando...</div>
 
     <script>
-        const listaDiv = document.getElementById('lista');
+    const listaDiv = document.getElementById('lista');
 
-        // FUNÇÃO PARA LER (READ)
-        async function buscarUsuarios() {
-            const resp = await fetch('http://localhost:3000/usuarios');
-            const dados = await resp.json();
-            listaDiv.innerHTML = dados.map(u => `
-                <div class="card">
+    // READ: Busca e exibe a lista com o botão de excluir
+    async function buscarUsuarios() {
+        const resp = await fetch('http://localhost:3000/usuarios');
+        const dados = await resp.json();
+        listaDiv.innerHTML = dados.map(u => `
+            <div class="card" style="display: flex; justify-content: space-between; align-items: center;">
+                <div>
                     <strong>${u.Nome}</strong> (${u.Email})
                 </div>
-            `).join('');
-        }
+                <button onclick="excluir(${u.UsuarioId})" style="background: #ff4444; color: white; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer;">
+                    Excluir
+                </button>
+            </div>
+        `).join('');
+    }
 
-        // FUNÇÃO PARA CRIAR (CREATE)
-        async function cadastrar() {
-            const dados = {
-                nome: document.getElementById('nome').value,
-                email: document.getElementById('email').value,
-                senha: document.getElementById('senha').value
-            };
+    // CREATE: Cadastra novo usuário
+    async function cadastrar() {
+        const nome = document.getElementById('nome').value;
+        const email = document.getElementById('email').value;
+        const senha = document.getElementById('senha').value;
 
-            await fetch('http://localhost:3000/usuarios', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(dados)
+        await fetch('http://localhost:3000/usuarios', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ nome, email, senha })
+        });
+
+        buscarUsuarios(); // Atualiza a lista
+    }
+
+    // DELETE: Remove o usuário do banco no Xeon
+    async function excluir(id) {
+        if (confirm('Tem certeza que deseja excluir este usuário?')) {
+            await fetch(`http://localhost:3000/usuarios/${id}`, {
+                method: 'DELETE'
             });
-
-            alert('Cadastrado!');
-            buscarUsuarios(); // Atualiza a lista automaticamente
+            buscarUsuarios(); // Atualiza a lista após excluir
         }
+    }
 
-        buscarUsuarios();
-    </script>
+    buscarUsuarios();
+</script>
 </body>

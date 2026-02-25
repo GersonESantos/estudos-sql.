@@ -11,7 +11,16 @@ Username: so
 
 Password: Gerson#2026
 
-
+***********************
+// Configuração da conexão (Use a senha que você criou no Docker)
+const config = {
+    user: 'sa',
+    password: 'Gerson#2026',
+    server: 'localhost',
+    database: 'SistemaCloud',
+    options: { encrypt: false, trustServerCertificate: true }
+};
+*********************
 
 
 
