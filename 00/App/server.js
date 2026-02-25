@@ -26,6 +26,11 @@ const config = {
 
 // --- ROTAS DA API ---
 
+app.get('/', (_, res) => {
+  res.write('Hello World!')
+  res.end()
+})
+
 // Rota para VALIDAR LOGIN
 app.post('/login', async (req, res) => {
     try {
