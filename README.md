@@ -46,3 +46,8 @@ sleep 2
 # 2. Iniciar a API Node.js entrando na pasta correta
 echo "🌐 Iniciando a API..."
 cd App && node server.js
+
+
+Pedfro@bmil.com
+123456
+gerson@exemplo.com
