@@ -1,0 +1,62 @@
+<body>
+    <h1>Gerenciador de Usuários (Xeon Cloud Lab)</h1>
+
+    <div class="card">
+        <h3>Novo Cadastro</h3>
+        <input type="text" id="nome" placeholder="Nome">
+        <input type="email" id="email" placeholder="E-mail">
+        <input type="password" id="senha" placeholder="Senha">
+        <button onclick="cadastrar()">Cadastrar</button>
+    </div>
+
+    <hr>
+    <h3>Lista de Usuários</h3>
+    <div id="lista">Carregando...</div>
+
+    <script>
+    const listaDiv = document.getElementById('lista');
+
+    // READ: Busca e exibe a lista com o botão de excluir
+    async function buscarUsuarios() {
+        const resp = await fetch('http://localhost:3000/usuarios');
+        const dados = await resp.json();
+        listaDiv.innerHTML = dados.map(u => `
+            <div class="card" style="display: flex; justify-content: space-between; align-items: center;">
+                <div>
+                    <strong>${u.Nome}</strong> (${u.Email})
+                </div>
+                <button onclick="excluir(${u.UsuarioId})" style="background: #ff4444; color: white; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer;">
+                    Excluir
+                </button>
+            </div>
+        `).join('');
+    }
+
+    // CREATE: Cadastra novo usuário
+    async function cadastrar() {
+        const nome = document.getElementById('nome').value;
+        const email = document.getElementById('email').value;
+        const senha = document.getElementById('senha').value;
+
+        await fetch('http://localhost:3000/usuarios', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ nome, email, senha })
+        });
+
+        buscarUsuarios(); // Atualiza a lista
+    }
+
+    // DELETE: Remove o usuário do banco no Xeon
+    async function excluir(id) {
+        if (confirm('Tem certeza que deseja excluir este usuário?')) {
+            await fetch(`http://localhost:3000/usuarios/${id}`, {
+                method: 'DELETE'
+            });
+            buscarUsuarios(); // Atualiza a lista após excluir
+        }
+    }
+
+    buscarUsuarios();
+</script>
+</body>

@@ -57,4 +57,21 @@ app.delete('/usuarios/:id', async (req, res) => {
     }
 });
 
+// Rota para EDITAR um usuário (UPDATE)
+app.put('/usuarios/:id', async (req, res) => {
+    try {
+        const { id } = req.params;
+        const { nome, email } = req.body;
+        await sql.connect(config);
+        
+        await sql.query`UPDATE Usuarios 
+                        SET Nome = ${nome}, Email = ${email} 
+                        WHERE UsuarioId = ${id}`;
+        
+        res.json({ message: 'Usuário atualizado com sucesso!' });
+    } catch (err) {
+        res.status(500).send(err.message);
+    }
+});
+
 app.listen(3000, () => console.log('API rodando na porta 3000'));
