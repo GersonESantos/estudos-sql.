@@ -7,7 +7,7 @@ Server: localhost
 
 Authentication: SQL Login
 
-Username: se
+Username: so
 
 Password: Gerson#2026
 
