@@ -48,6 +48,6 @@ echo "🌐 Iniciando a API..."
 cd App && node server.js
 
 
-Pedfro@bmil.com
-123456
-gerson@exemplo.com
+Pedro Pedfro@bmil.com 123456
+Gerson Dev gerson@exemplo.com hash_da_senha_123
+Gabriela Casanova  Gabibi@gmail.com Gabibi89*
