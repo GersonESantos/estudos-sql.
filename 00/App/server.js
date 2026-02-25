@@ -3,6 +3,13 @@ const sql = require('mssql');
 const cors = require('cors');
 
 const app = express();
+
+const path = require('path');
+
+// Esta linha faz a API servir seus arquivos HTML, CSS e JS automaticamente
+// Ela aponta para a pasta /00 (um nível acima da pasta App)
+app.use(express.static(path.join(__dirname, '../')));
+
 app.use(express.json());
 app.use(cors()); // Permite que o HTML fale com a API
 
@@ -74,7 +81,21 @@ app.put('/usuarios/:id', async (req, res) => {
     }
 });
 
+app.post('/login', async (req, res) => {
+    try {
+        const { email, senha } = req.body;
+        await sql.connect(config);
+        const result = await sql.query`SELECT Nome FROM Usuarios WHERE Email = ${email} AND Senha = ${senha}`;
 
+        if (result.recordset.length > 0) {
+            res.json({ success: true, nome: result.recordset[0].Nome });
+        } else {
+            res.status(401).json({ success: false, message: "Usuário ou senha inválidos" });
+        }
+    } catch (err) {
+        res.status(500).send(err.message);
+    }
+});
 
 
 app.listen(3000, () => console.log('API rodando na porta 3000'));

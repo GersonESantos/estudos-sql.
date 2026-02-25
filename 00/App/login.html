@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Login - Xeon System</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Entrar no Sistema</h1>
+        <input type="email" id="email" placeholder="E-mail">
+        <input type="password" id="senha" placeholder="Senha">
+        <button onclick="logar()">Acessar</button>
+        <p id="erro" style="color:red; display:none;"></p>
+    </div>
+
+    <script>
+        async function logar() {
+            const email = document.getElementById('email').value;
+            const senha = document.getElementById('senha').value;
+            
+            const res = await fetch('/login', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({ email, senha })
+            });
+
+            const dados = await res.json();
+            if (dados.success) {
+                localStorage.setItem('usuarioLogado', dados.nome);
+                window.location.href = 'index.html';
+            } else {
+                document.getElementById('erro').innerText = dados.message;
+                document.getElementById('erro').style.display = 'block';
+            }
+        }
+    </script>
+</body>
+</html>
