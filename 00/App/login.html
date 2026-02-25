@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Login - Xeon System</title>
+    <link rel="stylesheet" href="style.css"> </head>
+<body>
+    <div class="container">
+        <h1>Acesso ao Sistema</h1>
+        <div class="card">
+            <div class="form-group">
+                <input type="email" id="login-email" placeholder="Seu E-mail">
+            </div>
+            <div class="form-group">
+                <input type="password" id="login-senha" placeholder="Sua Senha">
+            </div>
+            <button class="btn-main" onclick="fazerLogin()">Entrar</button>
+            <p id="msg-erro" style="color: #ff4444; margin-top: 10px; display: none;"></p>
+        </div>
+    </div>
+
+    <script>
+        async function fazerLogin() {
+            const email = document.getElementById('login-email').value;
+            const senha = document.getElementById('login-senha').value;
+            const erroDiv = document.getElementById('msg-erro');
+
+            const resp = await fetch('http://localhost:3000/login', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email, senha })
+            });
+
+            const resultado = await resp.json();
+
+            if (resultado.success) {
+                // Salva o nome do usuário no navegador para usar depois
+                localStorage.setItem('usuarioLogado', resultado.user.Nome);
+                // Redireciona para a página do CRUD (index.html)
+                window.location.href = 'index.html';
+            } else {
+                erroDiv.innerText = resultado.message;
+                erroDiv.style.display = 'block';
+            }
+        }
+    </script>
+</body>
+</html>

@@ -74,7 +74,27 @@ app.put('/usuarios/:id', async (req, res) => {
     }
 });
 
+// Rota de Login
+app.post('/login', async (req, res) => {
+    try {
+        const { email, senha } = req.body;
+        await sql.connect(config);
 
+        // Busca o usuário que tenha o email E a senha informados
+        const result = await sql.query`SELECT UsuarioId, Nome FROM Usuarios 
+                                       WHERE Email = ${email} AND Senha = ${senha}`;
+
+        if (result.recordset.length > 0) {
+            // Login com sucesso! Retornamos os dados do usuário (menos a senha)
+            res.json({ success: true, user: result.recordset[0] });
+        } else {
+            // Se não encontrar ninguém, as credenciais estão erradas
+            res.status(401).json({ success: false, message: "E-mail ou senha incorretos." });
+        }
+    } catch (err) {
+        res.status(500).send(err.message);
+    }
+});
 
 
 app.listen(3000, () => console.log('API rodando na porta 3000'));
