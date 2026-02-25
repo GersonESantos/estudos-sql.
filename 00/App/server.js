@@ -74,4 +74,28 @@ app.put('/usuarios/:id', async (req, res) => {
     }
 });
 
+
+
+
 app.listen(3000, () => console.log('API rodando na porta 3000'));
+// Substitua o final do seu arquivo por este bloco:
+
+const iniciarServidor = async () => {
+    try {
+        // Tenta conectar ao banco de dados antes de abrir a porta
+        await sql.connect(config);
+        console.log('✅ Conectado ao SQL Server com sucesso!');
+
+        // Só abre a porta 3000 se a conexão acima funcionar
+        app.listen(3000, () => {
+            console.log('🚀 API rodando na porta 3000');
+            console.log('🔗 Acesse em: http://localhost:3000');
+        });
+    } catch (err) {
+        console.error('❌ Erro ao conectar no banco de dados:', err.message);
+        console.log('Dica: Verifique se o Docker está rodando (sudo docker start sql_server)');
+        process.exit(1); // Fecha o processo com erro
+    }
+};
+
+iniciarServidor();
